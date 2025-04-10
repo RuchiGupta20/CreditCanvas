@@ -43,5 +43,25 @@ def predict():
     return jsonify({"probability": probability})
 
 
+# New route for scatterplot random sampling
+@app.route("/scatter-sample", methods=["GET"])
+def scatter_sample():
+    try:
+        # Adjust the path if your CSV is located in a different folder
+        df = pd.read_csv("../data/Loan_Cleaned_Data.csv")
+
+        # Debug: print the actual column names
+        print("Columns:", df.columns.tolist())
+
+        # Select correct columns; replace with actual column names as needed
+        sample = df[["Credit_Score", "Annual_Income", "Loan_Approval_Status"]].dropna().sample(30)
+
+        # Return as JSON for the frontend
+        return sample.to_json(orient="records")
+    except Exception as e:
+        print("Error loading scatter data:", e)
+        return jsonify({"error": f"Failed to load scatter data: {str(e)}"}), 500
+
+
 if __name__ == "__main__":
     app.run(debug=True)
