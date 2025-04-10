@@ -23,12 +23,65 @@
       font-size: 14px;
       box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
     }
+    form label {
+      display: inline-block;
+      margin: 5px 10px;
+    }
+    #gauge-container {
+      margin-top: 40px;
+    }
+    #scatterplot {
+      margin-top: 60px;
+    }
   </style>
 </head>
 <body>
   <h2>US State Financial Dashboard</h2>
   <div id="map"></div>
   <div class="tooltip" style="opacity:0;"></div>
+
+  <hr>
+  <h2>Loan Approval Predictor</h2>
+  <form id="loan-form">
+    <label>Age: <input type="number" id="age" required></label>
+    <label>Dependents: <input type="number" id="dependents" required></label>
+    <label>Annual Income: <input type="number" id="income" required></label>
+    <label>Credit Score: <input type="number" id="credit" required></label>
+    <label>Total Existing Loan Amount: <input type="number" id="loan_total" required></label>
+    <label>Outstanding Debt: <input type="number" id="debt" required></label><br><br>
+
+    <label>Marital Status:
+      <select id="marital">
+        <option value="single">Single</option>
+        <option value="married">Married</option>
+      </select>
+    </label>
+
+    <label>Education:
+      <select id="education">
+        <option value="graduate">Graduate</option>
+        <option value="postgraduate">Postgraduate</option>
+        <option value="high school">High School</option>
+      </select>
+    </label>
+
+    <label>Residential Status:
+      <select id="residence">
+        <option value="own">Own</option>
+        <option value="rent">Rent</option>
+      </select>
+    </label>
+
+    <br><br>
+    <button type="submit">Predict Loan Approval</button>
+  </form>
+
+  <div id="gauge-container"></div>
+  <div id="gauge-tooltip" class="tooltip" style="opacity: 0;"></div>
+
+  <!-- New scatterplot container -->
+  <h3>Loan Dataset: Credit Score vs Income</h3>
+  <div id="scatterplot"></div>
 
   <script src="js/main.js"></script>
 </body>
