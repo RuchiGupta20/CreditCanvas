@@ -30,8 +30,8 @@ Install them via pip:
 
 2. Start the Flask backend:
 
->  cd models  
->  python app.py
+`cd models`  
+`python app.py`
 
 This will launch the Flask development server on http://localhost:5000 and enable endpoints for prediction and data sampling.
 
