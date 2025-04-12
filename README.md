@@ -25,8 +25,8 @@ Install them via pip:
 
 1. Clone the repository and navigate into the project folder:
 
->  git clone https://github.com/RuchiGupta20/CreditCanvas.git
->  cd creditcanvas
+`git clone https://github.com/RuchiGupta20/CreditCanvas.git`  
+`cd creditcanvas`
 
 2. Start the Flask backend:
 
