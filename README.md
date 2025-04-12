@@ -25,7 +25,7 @@ Install them via pip:
 
 1. Clone the repository and navigate into the project folder:
 
->  git clone <your-repo-url>  
+>  git clone https://github.com/RuchiGupta20/CreditCanvas.git
 >  cd creditcanvas
 
 2. Start the Flask backend:
@@ -128,3 +128,4 @@ Milestone 4: Credit Score Prediction (In Progress)
 - Visualization component under design  
 - Data refinement ongoing
 - We are actively tracking progress and tasks through GitHub Issues, which are available for review in the repository
+- Project Milestone Processbook can be found in the repo as a pdf, or at this link: https://docs.google.com/document/d/1ER4Kyb33fVkRLMbZDx2TP_sRa8pQYGN85nD6K9RolLg/edit?tab=t.0
