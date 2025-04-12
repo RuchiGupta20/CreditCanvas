@@ -79,7 +79,7 @@ We use a combination of cleaned public datasets and web-scraped financial source
 Internal cleaned files:
 - Combined_State_Financial_Profile.csv  
 - Loan_Cleaned_Data.csv  
-- Credit_Score_Interest_Model_Data.csv (in progress)
+- Credit_Score_Interest_Model_Data.csv
 
 ## Tech Stack  
 
