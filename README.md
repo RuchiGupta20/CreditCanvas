@@ -15,18 +15,18 @@ Ensure you have the following Python packages installed:
 
 Install them via pip:
 
-  pip install flask  
-  pip install flask-cors  
-  pip install pandas  
-  pip install scikit-learn  
-  pip install joblib
+- pip install flask  
+- pip install flask-cors  
+- pip install pandas  
+- pip install scikit-learn  
+- pip install joblib
 
 ### Instructions
 
 1. Clone the repository and navigate into the project folder:
 
-  git clone <your-repo-url>  
-  cd creditcanvas
+>  git clone <your-repo-url>  
+>  cd creditcanvas
 
 2. Start the Flask backend:
 
