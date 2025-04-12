@@ -15,31 +15,31 @@ Ensure you have the following Python packages installed:
 
 Install them via pip:
 
-pip install flask  
-pip install flask-cors  
-pip install pandas  
-pip install scikit-learn  
-pip install joblib
+  pip install flask  
+  pip install flask-cors  
+  pip install pandas  
+  pip install scikit-learn  
+  pip install joblib
 
 ### Instructions
 
 1. Clone the repository and navigate into the project folder:
 
-git clone <your-repo-url>  
-cd creditcanvas
+  git clone <your-repo-url>  
+  cd creditcanvas
 
 2. Start the Flask backend:
 
-cd models  
-python app.py
+  cd models  
+  python app.py
 
 This will launch the Flask development server on http://localhost:5000 and enable endpoints for prediction and data sampling.
 
 3. Open the frontend:
 
-Go back to the root directory and locate the index.html file.  
-Use the Live Server extension in VS Code to launch it:  
-Right-click on index.html and choose "Open with Live Server."
+  Go back to the root directory and locate the index.html file.  
+  Use the Live Server extension in VS Code to launch it:  
+  Right-click on index.html and choose "Open with Live Server."
 
 ## Overview  
 CreditCanvas is an interactive web-based tool designed to make credit data more transparent and accessible. By leveraging data visualization, it helps users explore credit trends, loan approval probabilities, and financial disparities across demographics and regions. The project aims to enhance financial literacy and empower users with actionable insights into their credit standing.  
