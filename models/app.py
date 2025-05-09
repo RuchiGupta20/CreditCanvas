@@ -47,8 +47,7 @@ def predict():
 
     return jsonify({"probability": probability})
 
-
-# New route for scatterplot random sampling
+# Route for scatterplot random sampling
 @app.route("/scatter-sample", methods=["GET"])
 def scatter_sample():
     try:
@@ -67,7 +66,6 @@ def scatter_sample():
     except Exception as e:
         print("Error loading scatter data:", e)
         return jsonify({"error": f"Failed to load scatter data: {str(e)}"}), 500
-
 
 if __name__ == "__main__":
     app.run(debug=True)
