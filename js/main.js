@@ -261,3 +261,123 @@ function updateGauge(score) {
 document.addEventListener("DOMContentLoaded", function () {
   updateGauge(0.5);
 });
+
+// ---------------------------
+// SCATTERPLOT: initial structure with axes + labels + legend
+// ---------------------------
+
+const scatterWidth = 600;
+const scatterHeight = 400;
+const scatterMargin = 60;
+
+// Create SVG container
+const scatterSvg = d3.select("#scatterplot")
+  .append("svg")
+  .attr("width", scatterWidth)
+  .attr("height", scatterHeight);
+
+// Scales with default domain — just placeholder values
+const scatterX = d3.scaleLinear()
+  .domain([500, 850]) // estimated credit score range
+  .range([scatterMargin, scatterWidth - scatterMargin]);
+
+const scatterY = d3.scaleLinear()
+  .domain([20000, 120000]) // estimated income range
+  .range([scatterHeight - scatterMargin, scatterMargin]);
+
+// Add X axis
+scatterSvg.append("g")
+  .attr("class", "x-axis")
+  .attr("transform", `translate(0, ${scatterHeight - scatterMargin})`)
+  .call(d3.axisBottom(scatterX).tickFormat(d3.format("d")));
+
+// X axis label
+scatterSvg.append("text")
+  .attr("x", scatterWidth / 2)
+  .attr("y", scatterHeight - 10)
+  .attr("text-anchor", "middle")
+  .attr("font-size", "14px")
+  .text("Credit Score");
+
+// Add Y axis
+scatterSvg.append("g")
+  .attr("class", "y-axis")
+  .attr("transform", `translate(${scatterMargin}, 0)`)
+  .call(d3.axisLeft(scatterY));
+
+// Y axis label
+scatterSvg.append("text")
+  .attr("transform", "rotate(-90)")
+  .attr("x", -scatterHeight / 2)
+  .attr("y", 15)
+  .attr("text-anchor", "middle")
+  .attr("font-size", "14px")
+  .text("Annual Income");
+
+// Add legend
+const legend = scatterSvg.append("g")
+  .attr("transform", `translate(${scatterWidth - 500}, ${scatterMargin})`);
+
+legend.append("circle")
+  .attr("cx", 0).attr("cy", 0).attr("r", 6).attr("fill", "green");
+legend.append("text")
+  .attr("x", 12).attr("y", 4).text("Approved").attr("font-size", "12px");
+
+legend.append("circle")
+  .attr("cx", 0).attr("cy", 20).attr("r", 6).attr("fill", "red");
+legend.append("text")
+  .attr("x", 12).attr("y", 24).text("Rejected").attr("font-size", "12px");
+
+// Tooltip div already exists (reuses .tooltip class)
+const scatterTooltip = d3.select(".tooltip");
+
+// Button click loads data points
+document.getElementById("generate-btn").addEventListener("click", function () {
+  d3.json("http://localhost:5000/scatter-sample").then(data => {
+    // Recalculate axis domains based on data
+    scatterX.domain(d3.extent(data, d => d.Credit_Score));
+    scatterY.domain(d3.extent(data, d => d.Annual_Income));
+
+    scatterSvg.select(".x-axis")
+      .transition()
+      .call(d3.axisBottom(scatterX).tickFormat(d3.format("d")));
+
+    scatterSvg.select(".y-axis")
+      .transition()
+      .call(d3.axisLeft(scatterY));
+
+    // Remove old points (if any)
+    scatterSvg.selectAll("circle.data-point").remove();
+
+    // Add new points
+    scatterSvg.selectAll("circle.data-point")
+      .data(data)
+      .enter()
+      .append("circle")
+      .attr("class", "data-point")
+      .attr("cx", d => scatterX(d.Credit_Score))
+      .attr("cy", d => scatterY(d.Annual_Income))
+      .attr("r", 6)
+      .attr("fill", d => d.Loan_Approval_Status === 1 ? "green" : "red")
+      .attr("opacity", 0.7)
+      .on("mouseover", function (event, d) {
+        d3.select(this).transition().duration(100).attr("r", 10);
+        scatterTooltip.transition().style("opacity", 1);
+        scatterTooltip.html(`
+          <strong>Credit Score:</strong> ${d.Credit_Score}<br/>
+          <strong>Income:</strong> $${Number(d.Annual_Income).toLocaleString()}<br/>
+          <strong>Status:</strong> ${d.Loan_Approval_Status === 1 ? "Approved" : "Rejected"}
+        `)
+        .style("left", (event.pageX + 10) + "px")
+        .style("top", (event.pageY - 20) + "px");
+      })
+      .on("mouseout", function () {
+        d3.select(this).transition().duration(100).attr("r", 6);
+        scatterTooltip.transition().style("opacity", 0);
+      });
+  }).catch(err => {
+    console.error("Error loading scatter data:", err);
+  });
+});
+
+
