@@ -2,12 +2,51 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>US State Financial Dashboard</title>
+  <title>CreditCanvas</title>
   <script src="https://d3js.org/d3.v7.min.js"></script>
   <script src="https://d3js.org/topojson.v3.min.js"></script>
   <style>
     body {
-      font-family: sans-serif;
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      background-color: #f0f6fa;
+      color: #333;
+    }
+    header {
+      text-align: center;
+      padding: 30px 10px 10px 10px;
+      background-color: #004b70;
+      color: #fff;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 38px;
+      letter-spacing: 1px;
+    }
+    header p {
+      font-style: italic;
+      margin-top: 5px;
+      color: #cfdde7;
+      font-size: 16px;
+    }
+    nav {
+      background-color: #003852;
+      color: white;
+      padding: 12px 0;
+      text-align: center;
+      font-size: 16px;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+    nav a {
+      color: #fff;
+      text-decoration: none;
+      margin: 0 20px;
+    }
+    nav a:hover {
+      text-decoration: underline;
+      color: #aadfff;
     }
     svg {
       width: 100%;
@@ -23,32 +62,176 @@
       font-size: 14px;
       box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
     }
+    form {
+      text-align: center;
+      margin: 20px auto;
+      max-width: 700px;
+    }
     form label {
-      display: inline-block;
-      margin: 5px 10px;
+      display: block;
+      margin: 12px 0;
+      font-weight: 500;
+    }
+    form input, form select {
+      padding: 6px 10px;
+      margin-left: 10px;
+      font-size: 14px;
     }
     #gauge-container {
-      margin-top: 40px;
+      margin: 20px auto;
+      text-align: center;
+      width: 100%;
+      justify-content: center;
+    }
+    #gauge-container svg {
+      display: block;
+      margin: 0 auto;
     }
     #scatterplot {
+      margin: 60px auto;
+      text-align: center;
+      display: block;
+      width: fit-content;
+    }
+    section {
+      padding: 30px;
+      max-width: 900px;
+      margin: 0 auto;
+      background-color: #f9f9f9;
+      border-left: 6px solid #1a9850;
+      border-radius: 4px;
+      margin-top: 30px;
+    }
+    section h2 {
+      margin-top: 0;
+    }
+    .centered {
+      text-align: center;
+    }
+    #map-container {
+      text-align: center;
+      margin-top: 20px;
+    }
+    footer {
       margin-top: 60px;
+      padding: 20px;
+      background-color: #e8f0f2;
+      border-top: 1px solid #ccc;
+      text-align: center;
+      font-size: 16px;
+    }
+    footer ul {
+      list-style: none;
+      padding: 0;
+    }
+    footer li {
+      margin: 4px 0;
+    }
+    h2, h3 {
+      color: #004b70;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #ccc;
+      margin: 40px 0;
+    }
+    button {
+      background-color: #1a9850;
+      color: white;
+      padding: 8px 16px;
+      border: none;
+      border-radius: 4px;
+      font-size: 14px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    button:hover {
+      background-color: #157f3a;
+    }
+    .legend-box {
+      display: flex;
+      justify-content: center;
+      margin-top: 10px;
+      font-size: 14px;
+      gap: 20px;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .legend-swatch {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: inline-block;
+      gap: 30px;
     }
   </style>
 </head>
 <body>
-  <h2>US State Financial Dashboard</h2>
-  <div id="map"></div>
+
+  <header>
+    <h1>CreditCanvas</h1>
+    <p>Visualizing Credit Trends and Loan Approval Insights Across the U.S.</p>
+  </header>
+
+  <nav>
+    <a href="#map-container">Map</a>
+    <a href="#loan-form">Loan Predictor</a>
+    <a href="#scatterplot">Scatterplot</a>
+  </nav>
+
+  <section>
+    <h2>Our Inspiration</h2>
+    <p>
+      In today's world, creditworthiness plays a critical role in determining opportunities. Whether it's buying a home,
+      securing a loan, or building a future, understanding credit data empowers people to make better financial decisions.
+      We built CreditCanvas because we believe transparency in financial trends should be accessible and intuitive. Our goal
+      was to transform raw state-level data into engaging, meaningful visualizations that tell a story about regional
+      credit health and borrowing outcomes. By combining thoughtful data design with predictive modeling, we hope to bring
+      clarity to a complex system and help users explore how where they live might shape their financial journeys.
+    </p>
+  </section>
+
+  <hr>
+
+  <h2 class="centered">US State Financial Dashboard</h2>
+  <section style="max-width: 900px; margin: 20px auto; padding: 0 30px;">
+    <p>
+      This interactive map displays the average credit and income profile of each U.S. state. Hover over any state to see its
+      average FICO credit score, average annual income, credit card debt, and debt-to-income ratio. The color of each state
+      reflects its average FICO score, ranging from lower scores in red to higher scores in green. This gradient helps you
+      quickly understand which states are facing greater credit challenges and which are performing more strongly. Use this
+      view to explore financial disparities across regions and gain insights into the credit behavior of residents by state.
+    </p>
+  </section>
+
+  <div id="map-container">
+    <div id="map" style="display: inline-block;"></div>
+  </div>
   <div class="tooltip" style="opacity:0;"></div>
 
   <hr>
-  <h2>Loan Approval Predictor</h2>
+
+  <h2 class="centered">Loan Approval Predictor</h2>
+  <section style="max-width: 900px; margin: 0 auto; padding: 0 30px;">
+    <p>
+      This tool estimates your chances of getting a loan approved based on your personal and financial profile. 
+      It considers factors such as your income, credit score, outstanding debt, and demographic information. 
+      Enter your information below and click "Predict Loan Approval" to see your predicted approval probability 
+      visualized on a speedometer-style gauge. This can help you understand how lenders might view your application and 
+      what adjustments could improve your chances.
+    </p>
+  </section>
+
   <form id="loan-form">
     <label>Age: <input type="number" id="age" required></label>
     <label>Dependents: <input type="number" id="dependents" required></label>
     <label>Annual Income: <input type="number" id="income" required></label>
     <label>Credit Score: <input type="number" id="credit" required></label>
     <label>Total Existing Loan Amount: <input type="number" id="loan_total" required></label>
-    <label>Outstanding Debt: <input type="number" id="debt" required></label><br><br>
+    <label>Outstanding Debt: <input type="number" id="debt" required></label>
 
     <label>Marital Status:
       <select id="marital">
@@ -72,18 +255,45 @@
       </select>
     </label>
 
-    <br><br>
     <button type="submit">Predict Loan Approval</button>
   </form>
 
   <div id="gauge-container"></div>
+  <div class="legend-box">
+    <div class="legend-item"><span class="legend-swatch" style="background:#d73027;"></span>Poor</div>
+    <div class="legend-item"><span class="legend-swatch" style="background:#fee08b;"></span>Fair</div>
+    <div class="legend-item"><span class="legend-swatch" style="background:#91cf60;"></span>Good</div>
+    <div class="legend-item"><span class="legend-swatch" style="background:#1a9850;"></span>Excellent</div>
+  </div>
   <div id="gauge-tooltip" class="tooltip" style="opacity: 0;"></div>
 
-  <hr style="margin: 40px 0;">
+  <hr>
 
-  <h3>Loan Dataset: Credit Score vs Income</h3>
-  <button id="generate-btn">Generate Random Dataset</button>
-  <div id="scatterplot"></div>
+  <h2 class="centered">Loan Dataset: Credit Score vs Income</h2>
+
+  <section style="max-width: 900px; margin: 0 auto; padding: 0 30px;">
+    <p>
+      This scatterplot visualizes the relationship between individuals’ credit scores, annual incomes, and their loan approval outcomes.
+      Each dot represents a sample individual. Green dots indicate approved loans and red dots indicate rejections. By analyzing the distribution,
+      you can observe how credit score and income influence approval likelihoods. Use this chart to understand broader patterns and potentially
+      identify thresholds or tipping points in financial profiles that impact lending decisions.
+    </p>
+  </section>
+
+  <div class="centered">
+    <button id="generate-btn">Generate Random Dataset</button>
+  </div>
+
+  <div id="scatterplot" class="centered"></div>
+
+  <footer>
+    <h3>Group Members</h3>
+    <ul>
+      <li>Ruchi Gupta</li>
+      <li>Shoubhit Ravi</li>
+      <li>Suryam Gupta</li>
+    </ul>
+  </footer>
 
   <script src="js/main.js"></script>
 </body>

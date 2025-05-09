@@ -150,12 +150,12 @@ function updateGauge(score) {
   const gauge = d3.select("#gauge-container");
   gauge.selectAll("*").remove();
 
-  const width = 500;
-  const height = 150;
+  const width = 2500;
+  const height = 550;
   const centerX = width / 2;
-  const centerY = height * 0.9;
-  const outerRadius = 130;
-  const innerRadius = 90;
+  const centerY = height * 0.92;
+  const outerRadius = 380;
+  const innerRadius = 330;
 
   const svg = gauge.append("svg")
     .attr("width", width)
@@ -266,8 +266,8 @@ document.addEventListener("DOMContentLoaded", function () {
 // SCATTERPLOT: initial structure with axes + labels + legend
 // ---------------------------
 
-const scatterWidth = 600;
-const scatterHeight = 400;
+const scatterWidth = 1000;
+const scatterHeight = 600;
 const scatterMargin = 60;
 
 // Create SVG container
@@ -289,44 +289,62 @@ const scatterY = d3.scaleLinear()
 scatterSvg.append("g")
   .attr("class", "x-axis")
   .attr("transform", `translate(0, ${scatterHeight - scatterMargin})`)
-  .call(d3.axisBottom(scatterX).tickFormat(d3.format("d")));
+  .call(d3.axisBottom(scatterX).tickFormat(d3.format("d")))
+  .selectAll("text")
+  .style("font-weight", "bold");
+
+scatterSvg.select(".x-axis path")
+  .style("stroke-width", 2);
+
+scatterSvg.selectAll(".x-axis line")
+  .style("stroke-width", 2);
 
 // X axis label
 scatterSvg.append("text")
   .attr("x", scatterWidth / 2)
-  .attr("y", scatterHeight - 10)
+  .attr("y", scatterHeight - 25)
   .attr("text-anchor", "middle")
-  .attr("font-size", "14px")
+  .attr("font-size", "15px")
+  .attr("font-weight", "bold")
   .text("Credit Score");
 
 // Add Y axis
 scatterSvg.append("g")
   .attr("class", "y-axis")
   .attr("transform", `translate(${scatterMargin}, 0)`)
-  .call(d3.axisLeft(scatterY));
+  .call(d3.axisLeft(scatterY))
+  .selectAll("text")
+  .style("font-weight", "bold");
+
+scatterSvg.select(".y-axis path")
+  .style("stroke-width", 2);
+
+scatterSvg.selectAll(".y-axis line")
+  .style("stroke-width", 2);
 
 // Y axis label
 scatterSvg.append("text")
   .attr("transform", "rotate(-90)")
   .attr("x", -scatterHeight / 2)
-  .attr("y", 15)
+  .attr("y", 10)
   .attr("text-anchor", "middle")
-  .attr("font-size", "14px")
+  .attr("font-size", "15px")
+  .attr("font-weight", "bold")
   .text("Annual Income");
 
 // Add legend
 const legend = scatterSvg.append("g")
-  .attr("transform", `translate(${scatterWidth - 500}, ${scatterMargin})`);
+  .attr("transform", `translate(${scatterWidth - 900}, ${scatterMargin})`);
 
 legend.append("circle")
-  .attr("cx", 0).attr("cy", 0).attr("r", 6).attr("fill", "green");
+  .attr("cx", -5).attr("cy", 0).attr("r", 12).attr("fill", "green");
 legend.append("text")
-  .attr("x", 12).attr("y", 4).text("Approved").attr("font-size", "12px");
+  .attr("x", 12).attr("y", 4).text("Approved").attr("font-size", "15px");
 
 legend.append("circle")
-  .attr("cx", 0).attr("cy", 20).attr("r", 6).attr("fill", "red");
+  .attr("cx", -5).attr("cy", 40).attr("r", 12).attr("fill", "red");
 legend.append("text")
-  .attr("x", 12).attr("y", 24).text("Rejected").attr("font-size", "12px");
+  .attr("x", 12).attr("y", 45).text("Rejected").attr("font-size", "15px");
 
 // Tooltip div already exists (reuses .tooltip class)
 const scatterTooltip = d3.select(".tooltip");
@@ -357,7 +375,7 @@ document.getElementById("generate-btn").addEventListener("click", function () {
       .attr("class", "data-point")
       .attr("cx", d => scatterX(d.Credit_Score))
       .attr("cy", d => scatterY(d.Annual_Income))
-      .attr("r", 6)
+      .attr("r", 12)
       .attr("fill", d => d.Loan_Approval_Status === 1 ? "green" : "red")
       .attr("opacity", 0.7)
       .on("mouseover", function (event, d) {
