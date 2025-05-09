@@ -3,13 +3,17 @@ from flask_cors import CORS
 import joblib
 import pandas as pd
 import traceback
+import os
 
 app = Flask(__name__)
-CORS(app)  # allows frontend running on a different port to connect
+CORS(app, supports_credentials=True, resources={r"/*": {"origins": "*"}})
 
-# Load model and encoders
-model = joblib.load("loan_approval_probability_model.pkl")
-encoders = joblib.load("loan_label_encoders.pkl")
+# Base directory to resolve relative paths
+basedir = os.path.dirname(os.path.abspath(__file__))
+
+# Load model and encoders using absolute paths
+model = joblib.load(os.path.join(basedir, "loan_approval_probability_model.pkl"))
+encoders = joblib.load(os.path.join(basedir, "loan_label_encoders.pkl"))
 
 @app.route("/predict", methods=["POST"])
 def predict():
@@ -48,8 +52,9 @@ def predict():
 @app.route("/scatter-sample", methods=["GET"])
 def scatter_sample():
     try:
-        # Adjust the path if your CSV is located in a different folder
-        df = pd.read_csv("../data/Loan_Cleaned_Data.csv")
+        # Path relative to backend folder
+        csv_path = os.path.join(basedir, "../data/Loan_Cleaned_Data.csv")
+        df = pd.read_csv(csv_path)
 
         # Debug: print the actual column names
         print("Columns:", df.columns.tolist())
