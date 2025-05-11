@@ -11,7 +11,8 @@ Ensure you have the following Python packages installed:
 - flask-cors  
 - pandas  
 - scikit-learn  
-- joblib  
+- joblib
+- numpy (if on python 3.12+, requires numpy 1.26+)
 
 Install them via pip:
 
@@ -20,6 +21,7 @@ Install them via pip:
 - pip install pandas  
 - pip install scikit-learn  
 - pip install joblib
+- pip install numpy
 
 ### Instructions
 
