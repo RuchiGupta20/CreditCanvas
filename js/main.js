@@ -113,13 +113,61 @@ Promise.all([
 document.getElementById("loan-form").addEventListener("submit", function(event) {
   event.preventDefault();
 
+  // Get input values
+  const age = +document.getElementById("age").value;
+  const dependents = +document.getElementById("dependents").value;
+  const income = +document.getElementById("income").value;
+  const loanTotal = +document.getElementById("loan_total").value;
+  const debt = +document.getElementById("debt").value;
+
+  // Create or get error message element
+  let errorMsg = document.getElementById("form-error");
+  if (!errorMsg) {
+    errorMsg = document.createElement("div");
+    errorMsg.id = "form-error";
+    errorMsg.style.color = "#d73027";
+    errorMsg.style.marginTop = "10px";
+    errorMsg.style.textAlign = "center";
+    document.getElementById("loan-form").appendChild(errorMsg);
+  }
+
+  // Validate non-negative values
+  if (age < 0) {
+    errorMsg.textContent = "Age cannot be negative";
+    return;
+  }
+  if (dependents < 0) {
+    errorMsg.textContent = "Number of dependents cannot be negative";
+    return;
+  }
+  if (income < 0) {
+    errorMsg.textContent = "Annual income cannot be negative";
+    return;
+  }
+  if (loanTotal < 0) {
+    errorMsg.textContent = "Total existing loan amount cannot be negative";
+    return;
+  }
+  if (debt < 0) {
+    errorMsg.textContent = "Outstanding debt cannot be negative";
+    return;
+  }
+
+  // Clear any previous error message
+  errorMsg.textContent = "";
+
+  // Get credit score range and calculate average
+  const creditScoreRange = document.getElementById("credit").value;
+  const [minScore, maxScore] = creditScoreRange.split("-").map(Number);
+  const averageCreditScore = Math.round((minScore + maxScore) / 2);
+
   const input = {
-    Age: +document.getElementById("age").value,
-    Dependents: +document.getElementById("dependents").value,
-    Annual_Income: +document.getElementById("income").value,
-    Credit_Score: +document.getElementById("credit").value,
-    Total_Existing_Loan_Amount: +document.getElementById("loan_total").value,
-    Outstanding_Debt: +document.getElementById("debt").value,
+    Age: age,
+    Dependents: dependents,
+    Annual_Income: income,
+    Credit_Score: averageCreditScore,
+    Total_Existing_Loan_Amount: loanTotal,
+    Outstanding_Debt: debt,
     Marital_Status: document.getElementById("marital").value,
     Education: document.getElementById("education").value,
     Residential_Status: document.getElementById("residence").value

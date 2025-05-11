@@ -229,7 +229,22 @@
     <label>Age: <input type="number" id="age" required></label>
     <label>Dependents: <input type="number" id="dependents" required></label>
     <label>Annual Income: <input type="number" id="income" required></label>
-    <label>Credit Score: <input type="number" id="credit" required></label>
+    <label>Credit Score:
+      <select id="credit" required>
+        <option value="">Select a range</option>
+        <option value="300-350">300-350 (Poor)</option>
+        <option value="351-400">351-400 (Poor)</option>
+        <option value="401-450">401-450 (Poor)</option>
+        <option value="451-500">451-500 (Poor)</option>
+        <option value="501-550">501-550 (Fair)</option>
+        <option value="551-600">551-600 (Fair)</option>
+        <option value="601-650">601-650 (Fair)</option>
+        <option value="651-700">651-700 (Good)</option>
+        <option value="701-750">701-750 (Good)</option>
+        <option value="751-800">751-800 (Very Good)</option>
+        <option value="801-850">801-850 (Excellent)</option>
+      </select>
+    </label>
     <label>Total Existing Loan Amount: <input type="number" id="loan_total" required></label>
     <label>Outstanding Debt: <input type="number" id="debt" required></label>
 
@@ -273,7 +288,7 @@
 
   <section style="max-width: 900px; margin: 0 auto; padding: 0 30px;">
     <p>
-      This scatterplot visualizes the relationship between individuals’ credit scores, annual incomes, and their loan approval outcomes.
+      This scatterplot visualizes the relationship between individuals' credit scores, annual incomes, and their loan approval outcomes.
       Each dot represents a sample individual. Green dots indicate approved loans and red dots indicate rejections. By analyzing the distribution,
       you can observe how credit score and income influence approval likelihoods. Use this chart to understand broader patterns and potentially
       identify thresholds or tipping points in financial profiles that impact lending decisions.
