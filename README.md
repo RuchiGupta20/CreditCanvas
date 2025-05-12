@@ -4,7 +4,7 @@
 ## Project Materials
 
 - [Project Screencast (YouTube)](https://youtu.be/nzO-AhdWWwM)
-- [Final Process Book (PDF)](docs/Final%20Process%20Book.pdf)
+- [Final Process Book (PDF)](Final%20Process%20Book.pdf)
 
 ---
 
