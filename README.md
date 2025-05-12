@@ -12,16 +12,7 @@
 
 ### Prerequisites
 
-Ensure you have the following Python packages installed:
-
-- flask  
-- flask-cors  
-- pandas  
-- scikit-learn  
-- joblib  
-- numpy (if using Python 3.12+, requires numpy >= 1.26)
-
-We also provide a `requirements.txt` file for convenience:
+To install the required libraries, run
 
 `pip install -r requirements.txt`
 
