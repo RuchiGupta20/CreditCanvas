@@ -28,7 +28,7 @@ To install the required libraries, run
 `cd models`  
 `python app.py`
 
-This will launch the Flask development server on http://localhost:5000 and enable endpoints for prediction and data sampling.
+This will launch the Flask development server and enable endpoints for prediction and data sampling.
 
 3. Open the frontend:
 
