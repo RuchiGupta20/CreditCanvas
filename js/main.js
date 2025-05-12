@@ -1,3 +1,23 @@
+// EVENT LISTENER FOR CREDIT PREDICTION, WHICH IS WHY IT IS AT THE TOP OF THE FILE, OUTSIDE OF FUNCTIONS
+// On change, if loan is "Yes", user can edit the existing-loans field
+// Else, it gets grayed out again, and the user can't edit it
+// This is a way of automating bounds checking for loan input
+
+
+document.addEventListener("DOMContentLoaded", () => {
+  const loanSel  = document.getElementById("c-loan-history");
+  const loansBox = document.getElementById("c-existing-loans");
+
+  function toggleExistingLoans() {
+    const hasLoan = loanSel.value === "Yes";
+    loansBox.disabled = !hasLoan;
+    loansBox.required =  hasLoan;
+    loansBox.value    =  hasLoan ? "" : 0;
+  }
+  toggleExistingLoans();                 // initial state
+  loanSel.addEventListener("change", toggleExistingLoans);
+});
+
 // ---------------------------
 // US FINANCIAL MAP SECTION
 // ---------------------------
@@ -173,8 +193,6 @@ document.getElementById("loan-form").addEventListener("submit", function(event) 
     Residential_Status: document.getElementById("residence").value
   };
 
-  // Simulated score — replace this with model/API call later
-
   fetch("http://127.0.0.1:5000/predict", {
     method: "POST",
     headers: {
@@ -198,7 +216,7 @@ function updateGauge(score) {
   const gauge = d3.select("#gauge-container");
   gauge.selectAll("*").remove();
 
-  const width = 2500;
+  const width = window.screen.width || 1000;
   const height = 550;
   const centerX = width / 2;
   const centerY = height * 0.92;
@@ -309,6 +327,180 @@ function updateGauge(score) {
 document.addEventListener("DOMContentLoaded", function () {
   updateGauge(0.5);
 });
+
+
+// --------------------------
+
+// CREDIT APPROVAL
+
+// --------------------------
+
+
+
+document.getElementById("credit-form").addEventListener("submit", e => {
+  e.preventDefault();
+
+  const $ = id => document.getElementById(id);
+  const errBox = $("c-form-error");
+  errBox.textContent = "";
+
+  // helper to validate non-neg numeric inputs
+  function pos(val, label) {
+    if (val < 0 || isNaN(val)) {
+      errBox.textContent = `${label} cannot be negative`;
+      throw new Error(label);
+    }
+    return val;
+  }
+
+  try {
+    // Updates value of the two dynamic fields into the payload
+    const hasLoan = document.getElementById("c-loan-history").value;
+    const loanFlag = hasLoan === "Yes" ? 1 : 0;
+
+    const existingLoans = hasLoan === "Yes" ? pos(+document.getElementById("c-existing-loans").value, "Existing loans") : 0;
+    const payload = {
+      Age: pos(+$("c-age").value, "Age"),
+      Dependents: pos(+$("c-dependents").value, "Dependents"),
+      Marital_Status: $("c-marital").value,
+      Employment_Status: $("c-employment").value,
+      Residential_Status: $("c-residence").value,
+      Annual_Income: pos(+$("c-income").value, "Annual income"),
+      Monthly_Expenses: pos(+$("c-expenses").value, "Monthly expenses"),
+      Existing_Loans: pos(existingLoans, "Number of loans "),
+      Total_Existing_Loan_Amount: pos(+$("c-loan-total").value, "Loan amount"),
+      Outstanding_Debt: pos(+$("c-debt").value, "Outstanding debt"),
+      Bank_Account_History: pos(+$("c-bank-history").value, "Bank history"),
+      Loan_History: loanFlag
+    };
+
+    // make sure dropdowns are selected
+    if (
+      !payload.Marital_Status ||
+      !payload.Employment_Status ||
+      !payload.Residential_Status
+    ) {
+      errBox.textContent = "Please choose all dropdown options";
+      return;
+    }
+
+    // POST to the credit prediction endpoint
+    fetch("http://127.0.0.1:5000/credit", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    })
+      .then(r => r.json())
+      .then(d => {
+        // Score is returned
+        const rawScore = d.score;
+        // Calculate angle of needle of credit wheel in radians                
+        const t = Math.min(1, Math.max(0, (rawScore - 300) / 550));
+        updateCreditGauge(t, rawScore)})
+      .catch(() => (errBox.textContent = "Server error – request was not processed. Please try again."));
+  } catch {
+    /* error already displayed */
+  }
+});
+
+// Gauge is identical to the loan predictor, reusing tooltip & colors
+// However, instead of just the angle, the raw score is also included as a parameter
+function updateCreditGauge(t, score) {
+  const container = d3.select("#credit-gauge-container");
+  container.selectAll("*").remove();
+
+    const W = window.screen.width || 1000;
+    H = 550,
+    CX = W / 2,
+    CY = H * 0.92,
+    R = 380,
+    r = 330;
+
+  // Wheel is divided into the following four segments, based on angle, label, color, and tip
+  // On hover over the segment, the tip will show
+  const segs = [
+    { label: "Poor", color: "#d73027", range: [0, 0.5], tip: "Your credit score is significantly below average. Consider getting a secured or beginner credit card to build your credit." },
+    { label: "Fair", color: "#fee08b", range: [0.5, 0.67], tip: "Your credit score is slightly below average. Keep paying your credit card and loans on time." },
+    { label: "Good", color: "#91cf60", range: [0.67, 0.8], tip: "Your credit score is at or slightly above average. This unlocks new opportunities to take out a loan at a good rate or get a better credit card, but also keep building your credit."},
+    { label: "Excellent", color: "#1a9850", range: [0.8, 1.0], tip: "Your credit is score is well above average. You will likely get approved for any credit card and loans at the best interest rates."}
+  ];
+
+  const svg = container.append("svg").attr("width", W).attr("height", H);
+  const arc = d3.arc()
+    .innerRadius(r)
+    .outerRadius(R)
+    .startAngle(d => Math.PI * d.range[0])
+    .endAngle(d => Math.PI * d.range[1]);
+
+  const gArc = svg
+    .append("g")
+    .attr("transform", `translate(${CX},${CY}) rotate(-90)`);
+
+  const tooltip = d3.select("#credit-gauge-tooltip");
+
+  // Add segments and animations for labels
+  gArc
+    .selectAll("path")
+    .data(segs)
+    .enter()
+    .append("path")
+    .attr("d", arc)
+    .attr("fill", d => d.color)
+    .on("mouseover", (ev, d) => {
+      tooltip.style("opacity", 1)
+        .html(`<strong>${d.label}</strong><br/>${d.tip}`)
+        .style("left", ev.pageX + 10 + "px")
+        .style("top", ev.pageY - 20 + "px");
+    })
+    .on("mousemove", (event) => {
+      tooltip.style("left", (event.pageX + 10) + "px").style("top", (event.pageY - 20) + "px");
+    })
+    .on("mouseout", () => tooltip.style("opacity", 0));
+
+  // Calculate the location of the pointer using the angle in radians
+  const angle = Math.PI * t,
+    L = R + 15;
+  const pointer = [
+    [0, 0],
+    [L * Math.cos(angle - Math.PI / 2), L * Math.sin(angle - Math.PI / 2)]
+  ];
+
+  svg
+    .append("g")
+    .attr("transform", `translate(${CX},${CY}) rotate(-90)`)
+    .append("path")
+    .attr("d", d3.line()(pointer))
+    .attr("stroke", "#000")
+    .attr("stroke-width", 4);
+
+  svg.append("circle").attr("cx", CX).attr("cy", CY).attr("r", 6).attr("fill", "#000");
+
+  // Adds textual credit score to the visualization for easy interpretation
+  lbl = ""
+  if (score !== null){
+    if (score >= 740){
+      lbl = "Excellent"
+    } else if (score >= 670) {
+      lbl = "Good"
+    } else if (score >= 580) {
+      lbl = "Fair"
+    } else {
+      lbl = "Poor"
+    }
+  }
+  svg
+    .append("text")
+    .attr("x", CX)
+    .attr("y", H + 10)
+    .attr("text-anchor", "middle")
+    .attr("font-size", "20px")
+    .attr("font-weight", "bold")
+    .text(`Predicted Credit Score: ${lbl}`);
+}
+
+// Show default gauge on load
+document.addEventListener("DOMContentLoaded", () => updateCreditGauge(0.5, null));
+
 
 // ---------------------------
 // SCATTERPLOT: initial structure with axes + labels + legend
