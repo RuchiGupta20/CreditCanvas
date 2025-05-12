@@ -1,14 +1,14 @@
 
 # CreditCanvas – Interactive Credit Data Visualization
 
-## 🔗 Project Materials
+## Project Materials
 
-- 🎥 [Project Screencast (YouTube)](https://youtu.be/nzO-AhdWWwM)
-- 📘 [Final Process Book (PDF)](docs/Final%20Process%20Book.pdf)
+- [Project Screencast (YouTube)](https://youtu.be/nzO-AhdWWwM)
+- [Final Process Book (PDF)](docs/Final%20Process%20Book.pdf)
 
 ---
 
-## 🚀 How to Run
+## How to Run
 
 ### Prerequisites
 
@@ -23,8 +23,7 @@ Ensure you have the following Python packages installed:
 
 We also provide a `requirements.txt` file for convenience:
 
-```bash
-pip install -r requirements.txt
+`pip install -r requirements.txt`
 
 ### Instructions
 
