@@ -90,11 +90,12 @@ Internal cleaned files:
 
 - Machine Learning Models:  
   - Logistic Regression for loan approval prediction  
-  - Random Forest Regressor for credit score prediction  
+  - XGBoost for credit score prediction  
 
 - Data Processing & Training:  
   - Pandas, NumPy, Scikit-learn  
-  - Joblib for model serialization  
+  - Joblib for model serialization
+  - Pickle for saving models and linking API to models  
 
 - Visualization Libraries Used:  
   - D3.js (for map, gauge, scatterplot)  
