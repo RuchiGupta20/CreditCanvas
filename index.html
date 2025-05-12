@@ -60,6 +60,7 @@
       border-radius: 5px;
       pointer-events: none;
       font-size: 14px;
+      z-index: 3;
       box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
     }
     form {
@@ -283,6 +284,104 @@
     <div class="legend-item"><span class="legend-swatch" style="background:#1a9850;"></span>Excellent</div>
   </div>
   <div id="gauge-tooltip" class="tooltip" style="opacity: 0;"></div>
+
+  <hr>
+
+  <h2 class="centered">Credit Score Predictor</h2>
+  <section style="max-width: 900px; margin: 0 auto; padding: 0 30px;">
+    <p>
+      This tool considers factors such as income, expenses, previous credit history, and debt to predict the relative range of your score.
+      Enter your information below and click "Predict Credit" to see your predicted credit score visualized on a speedometer-style gauge.
+      For privacy reasons, your exact score won't be displayed, but you will have an indication of what "range" your score is in. 
+    </p>
+  </section>
+
+  
+  <form id="credit-form" class="input-form">
+    <label>Age
+      <input id="c-age" type="number" min="18" required>
+    </label>
+
+    <label>Dependents
+      <input id="c-dependents" type="number" min="0" required>
+    </label>
+
+    <label>Marital Status
+      <select id="c-marital" required>
+        <option value="" disabled selected>Select…</option>
+        <option value="Single">Single</option>
+        <option value="Married">Married</option>
+      </select>
+    </label>
+
+    <label>Employment Status
+      <select id="c-employment" required>
+        <option value="" disabled selected>Select…</option>
+        <option value="Employed">Employed</option>
+        <option value="Self-Employed">Self-Employed</option>
+        <option value="Unemployed">Unemployed</option>
+      </select>
+    </label>
+
+    <label>Residential Status
+      <select id="c-residence" required>
+        <option value="" disabled selected>Select…</option>
+        <option value="Own">Own</option>
+        <option value="Rent">Rent</option>
+        <option value="Other">Other</option>
+      </select>
+    </label>
+
+    <label>Annual Income
+      <input id="c-income" type="number" min="0" required>
+    </label>
+
+    <label>Monthly Expenses
+      <input id="c-expenses" type="number" min="0" required>
+    </label>
+
+    <label> Have you Taken a Loan in the Last Five Years
+      <select id="c-loan-history" required>
+        <option value="" selected>Select…</option>
+        <option value="Yes">Yes</option>
+        <option value="No">No</option>
+      </select>
+    </label>
+
+    <label> Loans Taken in the Past Five Years</label>
+      <input id="c-existing-loans" type="number" min="0" value="0" required disabled>
+    </label>
+
+    <label>Loan Payment Remaining
+      <input id="c-loan-total" type="number" min="0" required>
+    </label>
+
+    <label>Outstanding Debt
+      <input id="c-debt" type="number" min="0" required>
+    </label>
+
+    <label>Age of oldest credit card or loan (in years)
+      <input id="c-bank-history" type="number" min="0" step="0.1" required>
+    </label>
+
+
+    <button type="submit">Predict Credit</button>
+    <!-- error box -->
+    <div id="c-form-error" class="error-msg"></div>
+  </form>
+
+  <!-- gauge + tooltip (reuse same CSS) -->
+
+  <div id="credit-gauge-container"></div>
+  <div class="legend-box">
+    <div class="legend-item"><span class="legend-swatch" style="background:#d73027;"></span>Poor</div>
+    <div class="legend-item"><span class="legend-swatch" style="background:#fee08b;"></span>Fair</div>
+    <div class="legend-item"><span class="legend-swatch" style="background:#91cf60;"></span>Good</div>
+    <div class="legend-item"><span class="legend-swatch" style="background:#1a9850;"></span>Excellent</div>
+  </div>
+  <div id="credit-gauge-tooltip" class="tooltip" style="opacity: 0;"></div>
+
+
 
   <hr>
 

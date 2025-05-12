@@ -13,6 +13,7 @@ from sklearn.metrics import (
     f1_score,
 )
 from xgboost import XGBRegressor
+from sklearn.pipeline import Pipeline
 import pickle
 
 RAW_CSV = os.path.join("..", "data", "data_processing", "credit_data", "Loan Dataset.csv")
@@ -72,16 +73,15 @@ def train_xgb_regressor(df: pd.DataFrame) -> None:
         X, y, stratify=y, test_size=0.20, random_state=42
     )
 
-    # carve 10% of train for early-stopping validation
+    # Removing 10% of train for early-stopping validation
     X_tr, X_val, y_tr, y_val = train_test_split(
         X_train, y_train, stratify=y_train, test_size=0.10, random_state=42
     )
 
-    # define which columns are numeric vs categorical
     numeric_cols = ["Age", "Dependents", "Total_Existing_Loan_Amount", "Outstanding_Debt", "Bank_Account_History", "Debt_to_Income_Ratio", "Expense_to_Income_Ratio", "Average_Length"]
     categorical_cols = ["Marital_Status", "Employment_Status", "Residential_Status", "Loan_History"]
 
-    # build a preprocessing pipeline
+    # Preprocessing pipeline
     preprocess = ColumnTransformer(
         [
             ("num", StandardScaler(), numeric_cols),
@@ -109,15 +109,20 @@ def train_xgb_regressor(df: pd.DataFrame) -> None:
         early_stopping_rounds=50,
     )
 
-    reg.fit(
-        X_tr_tf,
-        y_tr,
-        eval_set=[(X_val_tf, y_val)],
-        verbose=False,
-    )
+    # Pipeline that is used for simplifying API implementation - any feature extraction of request data can be done here instead of coded again in the API
+
+    pipe = Pipeline([("prep", preprocess), ("reg", reg)])
+    pipe.fit(X_train, y_train,
+         reg__eval_set=[(X_val_tf, y_val)], reg__verbose=False)
+    
+
+
+    # -----------------
+    # FOR TESTING
+    # -----------------
 
     # predict continuous scores on test set
-    y_pred_cont = reg.predict(X_test_tf)
+    y_pred_cont = pipe.predict(X_test)
     mae = mean_absolute_error(y_test, y_pred_cont)
     print(f"Numeric MAE on 300–850 score: {mae:.2f}")
 
@@ -134,8 +139,10 @@ def train_xgb_regressor(df: pd.DataFrame) -> None:
     print(f"Macro-F1 : {f1_score(y_test_cls, y_pred_cls, average='macro'):.4f}\n")
     print(classification_report(y_test_cls, y_pred_cls))
 
+    # Store the model so it can be used for making predictions
+
     with open("credit_prediction_model.pkl", "wb") as model_file:
-        pickle.dump(reg, model_file)
+        pickle.dump(pipe, model_file)
 
 
 if __name__ == "__main__":
