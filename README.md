@@ -5,6 +5,7 @@
 
 - [Project Screencast (YouTube)](https://youtu.be/nzO-AhdWWwM)
 - [Final Process Book (PDF)](Final%20Process%20Book.pdf)
+- [Project Website](https://ruchigupta20.github.io/CreditCanvas/)
 
 ---
 
@@ -213,3 +214,4 @@ This repository includes both original code written by our team and open-source 
 For a detailed explanation of each directory, file, and implementation rationale, please refer to our:
 
 **Final Process Book**: [CreditCanvas Final Process Book (PDF)](Final%20Process%20Book.pdf)
+**Live Website**: [Project Website](https://ruchigupta20.github.io/CreditCanvas/)
