@@ -54,7 +54,7 @@ CreditCanvas is an interactive web-based tool designed to make credit data more 
 ### Credit Trends by State  
 - U.S. state map visualizing credit score, income, and debt-to-income ratio  
 - Hover-enabled tooltips displaying FICO, income, and debt data  
-- Color-coded gradient scale based on average FICO per state  
+- Color-coded gradient scale based on average FICO per state
 
 ## Why CreditCanvas?  
 
@@ -120,6 +120,7 @@ Milestone 3: Frontend Integration
 - Scatterplot generates 30 random points and shows hover tooltips  
 
 Milestone 4: Completion 
+- Credit approval speedometer functional with live prediction
 - We actively tracked progress and tasks through GitHub Issues, which are available for review in the repository
 - Project Milestone Processbook can be found in the repo as a pdf, or at this link: https://docs.google.com/document/d/1ER4Kyb33fVkRLMbZDx2TP_sRa8pQYGN85nD6K9RolLg/edit?tab=t.0
 
@@ -147,7 +148,18 @@ A semicircular gauge displays the predicted loan approval probability after the 
 - Hovering over segments reveals suggestions to improve loan chances.
 - After submission, the pointer animates to show the predicted approval percentage.
 
-### 3. Scatterplot: Credit Score vs. Income
+
+### 3. Credit Prediction Speedometer
+
+A semicircular gauge displaying the predicted credit score rating after the user submits their financial profile via the form. Note that this is NOT the exact score due to privacy reasons. Rather, it is a range based on the actual score predicted by the model:
+"Poor" less than 579 (red), "Fair" between 580 and 669 (yellow/orange), "Good" between 670 and 739 (light green), and "Excellent" above 740 (dark green).
+
+- Hovering over any colored part of the gauge will give the exact range's label, as well as some feedback on what they could do to improve their credit.
+- After clicking on "Predict Credit", the pointer updates to the new position that corresponds to the actual score. However, the actual value of the score is hidden. The only thing that the user knows for sure is the relative range.
+- Parameters can be changed, and clicking on "Predict Credit" again will refresh the needle.
+- Bounds checking is done on all user input to check for faulty input before trying to access the API. 
+
+### 4. Scatterplot: Credit Score vs. Income
 This scatterplot shows a sample of real loan applicants with their credit scores and annual incomes, along with whether they were approved or rejected.
 
 **Features:**
@@ -157,6 +169,8 @@ This scatterplot shows a sample of real loan applicants with their credit scores
   - Annual income  
   - Loan approval status  
 - Button generates a new random sample of 30 applicants each time.
+
+
 
 ## Code and Library Overview
 
