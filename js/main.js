@@ -193,7 +193,7 @@ document.getElementById("loan-form").addEventListener("submit", function(event) 
     Residential_Status: document.getElementById("residence").value
   };
 
-  fetch("https://creditcanvas.onrender.com/scatter-sample", {
+  fetch("https://creditcanvas.onrender.com/predict", {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
@@ -591,7 +591,7 @@ const scatterTooltip = d3.select(".tooltip");
 
 // Button click loads data points
 document.getElementById("generate-btn").addEventListener("click", function () {
-  d3.json("https://creditcanvas.onrender.com/predict").then(data => {
+  d3.json("https://creditcanvas.onrender.com/scatter-sample").then(data => {
     // Recalculate axis domains based on data
     scatterX.domain(d3.extent(data, d => d.Credit_Score));
     scatterY.domain(d3.extent(data, d => d.Annual_Income));
